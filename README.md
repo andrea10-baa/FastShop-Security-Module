@@ -4,6 +4,7 @@
 ![Flask](https://img.shields.io/badge/Flask-Framework-lightgrey)
 ![MySQL](https://img.shields.io/badge/MySQL-Database-orange)
 ![HTML](https://img.shields.io/badge/HTML-CSS-red)
+![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-yellow)
 
 Proyecto universitario del curso **Base de Datos 1** — Universidad Mesoamericana.  
 Sistema web desarrollado en Python/Flask con MySQL para la gestión de una tienda de 
@@ -39,7 +40,7 @@ productos de natación, con un módulo de seguridad y control de accesos por rol
 - Flask
 - MySQL
 - HTML5 & CSS3
-- JavaScript
+- JavaScript (vanilla — modales, validaciones y eventos del DOM)
 - Jinja2 Templates
 
 ---
