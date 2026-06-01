@@ -1,0 +1,30 @@
+# INSTRUCCIONES PARA MAÑANA
+
+## Paso 1: Abrir el proyecto
+1. Abre Visual Studio Code
+2. File → Open Folder
+3. Selecciona la carpeta FastShop
+
+## Paso 2: Instalar librerías
+1. En VS Code: Terminal → New Terminal
+2. Ejecuta: pip install -r requirements.txt
+3. Espera 2-3 minutos
+
+## Paso 3: ¡Listo!
+Ya puedes empezar a programar después de tu parcial.
+
+---
+
+CREDENCIALES IMPORTANTES:
+
+MySQL:
+- Usuario: root
+- Contraseña: fastshop2024
+
+Sistema:
+- Usuario: admin
+- Contraseña: fastshop#2026.
+
+---
+
+¡Mucha suerte en tu parcial de contabilidad! 🍀

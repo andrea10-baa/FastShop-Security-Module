@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Factura - Fast Shop Guatemala</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --aqua: #00C9A7; --aqua2: #00A98F; --dark: #0A0F1E;
+            --card: #161D2F; --card2: #1E2740; --border: rgba(0,201,167,0.15);
+            --text: #E8F0FE; --muted: #6B7A99;
+        }
+        body { min-height: 100vh; background: var(--dark); font-family: 'DM Sans', sans-serif; color: var(--text); }
+        body::before { content: ''; position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse 70% 50% at 10% 0%, rgba(0,201,167,0.10) 0%, transparent 60%), radial-gradient(ellipse 50% 60% at 90% 100%, rgba(0,119,255,0.08) 0%, transparent 60%); pointer-events: none; }
+        body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-image: radial-gradient(rgba(0,201,167,0.06) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; }
+        nav { position: sticky; top: 0; z-index: 100; background: rgba(10,15,30,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 0 32px; display: flex; align-items: center; height: 64px; }
+        .nav-brand { font-family: 'Outfit', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; flex: 1; }
+        .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--aqua); box-shadow: 0 0 8px var(--aqua); animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.8); } }
+        .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+        .nav-links a { display: block; padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; transition: all 0.2s; }
+        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+        .nav-links a.active { color: var(--aqua); background: rgba(0,201,167,0.08); }
+        .nav-user { display: flex; align-items: center; gap: 10px; margin-left: 16px; padding-left: 16px; border-left: 1px solid rgba(255,255,255,0.08); }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--aqua), var(--aqua2)); display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; color: #0A0F1E; }
+        .nav-username { font-size: 13px; font-weight: 500; }
+        .btn-logout { display: flex; align-items: center; gap: 6px; padding: 7px 14px; background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2); border-radius: 8px; color: #FF6B6B; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.2s; margin-left: 8px; }
+        main { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+        .page-header { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px 40px; margin-bottom: 32px; position: relative; overflow: hidden; }
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--aqua), transparent); }
+        .page-header h1 { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .page-header p { font-size: 14px; color: var(--muted); }
+        .form-card { background: var(--card); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+        .form-card h2 { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+        select, input[type="number"] { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: all 0.2s; appearance: none; }
+        select option { background: #161D2F; color: var(--text); }
+        select:focus, input[type="number"]:focus { border-color: var(--aqua); background: rgba(0,201,167,0.05); box-shadow: 0 0 0 3px rgba(0,201,167,0.10); }
+        .section-title { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+        .product-row { display: grid; grid-template-columns: 1fr 130px 130px 40px; gap: 12px; align-items: center; background: var(--card2); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+        .product-row select { background: rgba(255,255,255,0.04); }
+        .subtotal-display { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; color: var(--aqua); min-width: 80px; }
+        .btn-remove { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,107,107,0.10); border: 1px solid rgba(255,107,107,0.2); color: #FF6B6B; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 16px; }
+        .btn-remove:hover { background: rgba(255,107,107,0.20); }
+        .btn-add { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: rgba(0,201,167,0.08); border: 1px solid rgba(0,201,167,0.2); border-radius: 8px; color: var(--aqua); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; margin-bottom: 24px; }
+        .btn-add:hover { background: rgba(0,201,167,0.15); }
+        .total-box { background: rgba(0,201,167,0.06); border: 1px solid rgba(0,201,167,0.2); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+        .total-label { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; color: var(--muted); }
+        .total-value { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 700; color: var(--aqua); }
+        .btn-submit { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--aqua), var(--aqua2)); border: none; border-radius: 12px; color: #0A0F1E; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 20px rgba(0,201,167,0.25); }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,201,167,0.35); }
+        .btn-back { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: var(--muted); font-size: 13px; text-decoration: none; transition: all 0.2s; margin-bottom: 24px; }
+        .btn-back:hover { color: var(--text); background: rgba(255,255,255,0.08); }
+    </style>
+</head>
+<body>
+    <nav>
+        <a class="nav-brand" href="/home"><div class="nav-dot"></div>Fast Shop Guatemala</a>
+        <ul class="nav-links">
+            <li><a href="/home">Inicio</a></li>
+            <li><a href="/mantenimiento">Mantenimiento</a></li>
+            <li><a href="/reportes">Reportes</a></li>
+            <li><a href="/facturacion" class="active">Facturación</a></li>
+        </ul>
+        <div class="nav-user">
+            <div class="avatar">{{ session.nombre[0] | upper }}</div>
+            <span class="nav-username">{{ session.nombre }}</span>
+            <span style="font-size:11px;color:var(--aqua);font-family:'Outfit',sans-serif;font-weight:600;background:rgba(0,201,167,0.1);border:1px solid rgba(0,201,167,0.2);border-radius:100px;padding:2px 8px;">{{ session.nombre_rol }}</span>
+            <a href="/logout" class="btn-logout">
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                Salir
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <a href="/facturacion" class="btn-back">← Volver a Facturación</a>
+
+        <div class="page-header">
+            <h1>Nueva Factura</h1>
+            <p>Crear nueva factura de venta</p>
+        </div>
+
+        <form method="POST" action="/facturacion/guardar" id="formFactura">
+
+            <div class="form-card">
+                <h2>Datos del Cliente</h2>
+                <div class="form-group">
+                    <label for="id_cliente">Cliente</label>
+                    <select name="id_cliente" id="id_cliente" required>
+                        <option value="">Selecciona un cliente...</option>
+                        {% for c in clientes %}
+                        <option value="{{ c.id_cliente }}">{{ c.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h2>Productos</h2>
+
+                <p class="section-title">Agregar productos</p>
+
+                <div id="productos-container">
+                    <div class="product-row">
+                        <select name="producto_id[]" class="producto-select" onchange="actualizarSubtotal(this)" required>
+                            <option value="">Selecciona producto...</option>
+                            {% for p in productos %}
+                            <option value="{{ p.id_producto }}" data-precio="{{ p.precio }}" data-stock="{{ p.stock }}">
+                                {{ p.nombre }} — Q{{ "%.2f"|format(p.precio) }} (Stock: {{ p.stock }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <input type="number" name="cantidad[]" class="cantidad-input" min="1" value="1" placeholder="Cant." onchange="actualizarSubtotal(this)">
+                        <span class="subtotal-display">Q0.00</span>
+                        <button type="button" class="btn-remove" onclick="eliminarFila(this)">×</button>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-add" onclick="agregarProducto()">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                    Agregar Producto
+                </button>
+
+                <div class="total-box">
+                    <span class="total-label">Total de la Factura</span>
+                    <span class="total-value" id="total-display">Q0.00</span>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    Guardar Factura
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <script>
+        const productosData = {
+            {% for p in productos %}
+            "{{ p.id_producto }}": { precio: {{ p.precio }}, stock: {{ p.stock }}, nombre: "{{ p.nombre }}" }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        function actualizarSubtotal(el) {
+            const row = el.closest('.product-row');
+            const select = row.querySelector('.producto-select');
+            const cantInput = row.querySelector('.cantidad-input');
+            const subtotalEl = row.querySelector('.subtotal-display');
+            const pid = select.value;
+            if (!pid) { subtotalEl.textContent = 'Q0.00'; calcularTotal(); return; }
+            const precio = productosData[pid].precio;
+            const cant = parseInt(cantInput.value) || 0;
+            subtotalEl.textContent = 'Q' + (precio * cant).toFixed(2);
+            calcularTotal();
+        }
+
+        function calcularTotal() {
+            let total = 0;
+            document.querySelectorAll('.subtotal-display').forEach(el => {
+                total += parseFloat(el.textContent.replace('Q','')) || 0;
+            });
+            document.getElementById('total-display').textContent = 'Q' + total.toFixed(2);
+        }
+
+        function agregarProducto() {
+            const container = document.getElementById('productos-container');
+            const primera = container.querySelector('.product-row');
+            const nueva = primera.cloneNode(true);
+            nueva.querySelector('.producto-select').value = '';
+            nueva.querySelector('.cantidad-input').value = 1;
+            nueva.querySelector('.subtotal-display').textContent = 'Q0.00';
+            nueva.querySelector('.producto-select').addEventListener('change', function(){ actualizarSubtotal(this); });
+            nueva.querySelector('.cantidad-input').addEventListener('change', function(){ actualizarSubtotal(this); });
+            nueva.querySelector('.btn-remove').addEventListener('click', function(){ eliminarFila(this); });
+            container.appendChild(nueva);
+        }
+
+        function eliminarFila(btn) {
+            const filas = document.querySelectorAll('.product-row');
+            if (filas.length > 1) { btn.closest('.product-row').remove(); calcularTotal(); }
+        }
+    </script>
+</body>
+</html>

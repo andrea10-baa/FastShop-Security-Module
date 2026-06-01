@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Fast Shop Guatemala</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --aqua:  #00C9A7;
+            --aqua2: #00A98F;
+            --dark:  #0A0F1E;
+            --card:  #161D2F;
+            --border: rgba(0,201,167,0.18);
+            --text:  #E8F0FE;
+            --muted: #6B7A99;
+            --error: #FF6B6B;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--dark);
+            font-family: 'DM Sans', sans-serif;
+            overflow: hidden;
+        }
+
+        .bg {
+            position: fixed; inset: 0; z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0,201,167,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 85% 80%, rgba(0,169,143,0.10) 0%, transparent 60%),
+                var(--dark);
+        }
+
+        .grid-lines {
+            position: fixed; inset: 0; z-index: 0;
+            background-image: radial-gradient(rgba(0,201,167,0.08) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .orb {
+            position: fixed; border-radius: 50%;
+            filter: blur(80px); opacity: 0.15;
+            animation: float 8s ease-in-out infinite; z-index: 0;
+        }
+        .orb1 { width:400px; height:400px; background:var(--aqua);  top:-100px; left:-100px; animation-delay:0s; }
+        .orb2 { width:300px; height:300px; background:#0077FF; bottom:-80px; right:-80px; animation-delay:3s; }
+        .orb3 { width:200px; height:200px; background:var(--aqua2); top:50%; left:60%; animation-delay:5s; }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0px) scale(1); }
+            50%      { transform: translateY(-30px) scale(1.05); }
+        }
+
+        .card {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 440px; margin: 20px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 48px 44px;
+            box-shadow: 0 0 0 1px rgba(0,201,167,0.08), 0 32px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+            animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        @keyframes slideUp {
+            from { opacity:0; transform: translateY(40px) scale(0.97); }
+            to   { opacity:1; transform: translateY(0) scale(1); }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute; top:0; left:24px; right:24px; height:2px;
+            background: linear-gradient(90deg, transparent, var(--aqua), transparent);
+            border-radius: 0 0 2px 2px;
+        }
+
+        .header { text-align: center; margin-bottom: 36px; }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(0,201,167,0.1);
+            border: 1px solid rgba(0,201,167,0.25);
+            border-radius: 100px; padding: 6px 14px; margin-bottom: 20px;
+        }
+
+        .badge-dot {
+            width:6px; height:6px; border-radius:50%; background:var(--aqua);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,100% { opacity:1; transform:scale(1); }
+            50%      { opacity:0.5; transform:scale(0.8); }
+        }
+
+        .badge span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px; font-weight: 600;
+            letter-spacing: 0.08em; text-transform: uppercase; color: var(--aqua);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px; font-weight: 700; color: var(--text);
+            letter-spacing: -0.5px; margin-bottom: 8px;
+        }
+
+        .subtitle { font-size: 14px; color: var(--muted); }
+
+        .alert {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,107,107,0.08);
+            border: 1px solid rgba(255,107,107,0.25);
+            border-radius: 12px; padding: 12px 16px; margin-bottom: 24px;
+            color: var(--error); font-size: 13.5px; font-weight: 500;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%,100% { transform:translateX(0); }
+            25%      { transform:translateX(-6px); }
+            75%      { transform:translateX(6px); }
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px; font-weight: 600;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            color: var(--muted); margin-bottom: 8px;
+        }
+
+        .input-wrap { position: relative; }
+
+        .input-icon {
+            position: absolute; left: 16px; top: 50%;
+            transform: translateY(-50%); color: var(--muted);
+            display: flex; transition: color 0.2s; pointer-events: none;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px; outline: none;
+            transition: all 0.25s ease;
+        }
+
+        input::placeholder { color: rgba(107,122,153,0.6); }
+
+        input:focus {
+            border-color: var(--aqua);
+            background: rgba(0,201,167,0.05);
+            box-shadow: 0 0 0 3px rgba(0,201,167,0.12);
+        }
+
+        input:focus ~ .input-icon { color: var(--aqua); }
+
+        .toggle-pass {
+            position: absolute; right: 14px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none;
+            color: var(--muted); cursor: pointer;
+            padding: 4px; display: flex; transition: color 0.2s;
+        }
+        .toggle-pass:hover { color: var(--aqua); }
+
+        .btn {
+            width: 100%; padding: 15px;
+            background: linear-gradient(135deg, var(--aqua) 0%, var(--aqua2) 100%);
+            border: none; border-radius: 12px;
+            color: #0A0F1E;
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px; font-weight: 700;
+            cursor: pointer; margin-top: 8px;
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 24px rgba(0,201,167,0.3);
+        }
+
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,201,167,0.4); }
+        .btn:active { transform: translateY(0); }
+
+        .footer {
+            text-align: center; margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .footer p { font-size: 12px; color: var(--muted); }
+        .footer strong { color: var(--aqua); font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div class="bg"></div>
+    <div class="grid-lines"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <div class="card">
+        <div class="header">
+            <div class="badge">
+                <div class="badge-dot"></div>
+                <span>Sistema Activo</span>
+            </div>
+            <h1>Bienvenido a Fast Shop Guatemala</h1>
+            <p class="subtitle">Productos de Natacion - Ingresa tus credenciales para continuar</p>
+        </div>
+
+        {% if error %}
+        <div class="alert">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            </svg>
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="usuario">Correo Electrónico</label>
+                <div class="input-wrap">
+                    <input type="email" id="usuario" name="usuario" placeholder="Ingresa tu correo electrónico" required autofocus autocomplete="off">
+                    <div class="input-icon">
+                        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="contrasena">Contraseña</label>
+                <div class="input-wrap">
+                    <input type="password" id="contrasena" name="contrasena" placeholder="Ingresa tu contraseña" required>
+                    <div class="input-icon">
+                        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <button type="button" class="toggle-pass" onclick="togglePassword()">
+                        <svg id="eye-icon" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">Iniciar Sesión</button>
+        </form>
+
+        <div class="footer">
+            <p>Fast Shop Guatemala &nbsp;·&nbsp; <strong>© 2026</strong></p>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('contrasena');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
+            } else {
+                input.type = 'password';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+            }
+        }
+    </script>
+</body>
+</html>

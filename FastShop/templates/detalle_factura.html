@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Factura - Fast Shop Guatemala</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --aqua: #00C9A7; --aqua2: #00A98F; --dark: #0A0F1E;
+            --card: #161D2F; --border: rgba(0,201,167,0.15);
+            --text: #E8F0FE; --muted: #6B7A99;
+        }
+        body { min-height: 100vh; background: var(--dark); font-family: 'DM Sans', sans-serif; color: var(--text); }
+        body::before { content: ''; position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse 70% 50% at 10% 0%, rgba(0,201,167,0.10) 0%, transparent 60%), radial-gradient(ellipse 50% 60% at 90% 100%, rgba(0,119,255,0.08) 0%, transparent 60%); pointer-events: none; }
+        body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-image: radial-gradient(rgba(0,201,167,0.06) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; }
+        nav { position: sticky; top: 0; z-index: 100; background: rgba(10,15,30,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 0 32px; display: flex; align-items: center; height: 64px; }
+        .nav-brand { font-family: 'Outfit', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; flex: 1; }
+        .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--aqua); box-shadow: 0 0 8px var(--aqua); animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+        .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+        .nav-links a { display: block; padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; transition: all 0.2s; }
+        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+        .nav-links a.active { color: var(--aqua); background: rgba(0,201,167,0.08); }
+        .nav-user { display: flex; align-items: center; gap: 10px; margin-left: 16px; padding-left: 16px; border-left: 1px solid rgba(255,255,255,0.08); }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--aqua), var(--aqua2)); display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; color: #0A0F1E; }
+        .nav-username { font-size: 13px; font-weight: 500; }
+        .btn-logout { display: flex; align-items: center; gap: 6px; padding: 7px 14px; background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2); border-radius: 8px; color: #FF6B6B; font-size: 13px; font-weight: 500; text-decoration: none; margin-left: 8px; }
+        main { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 48px 24px; }
+        .btn-back { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: var(--muted); font-size: 13px; text-decoration: none; transition: all 0.2s; margin-bottom: 24px; }
+        .btn-back:hover { color: var(--text); background: rgba(255,255,255,0.08); }
+
+        /* Factura card */
+        .factura-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; position: relative; }
+        .factura-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--aqua), transparent); }
+
+        .factura-header { padding: 32px 40px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: flex-start; }
+        .factura-number { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 700; color: var(--aqua); margin-bottom: 4px; }
+        .factura-date { font-size: 13px; color: var(--muted); }
+        .badge { display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 600; }
+        .badge-active { background: rgba(0,201,167,0.12); color: var(--aqua); border: 1px solid rgba(0,201,167,0.2); }
+        .badge-inactive { background: rgba(255,107,107,0.10); color: #FF6B6B; border: 1px solid rgba(255,107,107,0.2); }
+
+        .factura-info { padding: 28px 40px; border-bottom: 1px solid rgba(255,255,255,0.06); display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .info-group label { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: block; }
+        .info-group p { font-size: 15px; font-weight: 500; color: var(--text); }
+
+        .factura-body { padding: 28px 40px; }
+        .section-title { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: rgba(0,201,167,0.05); border-bottom: 1px solid rgba(255,255,255,0.06); }
+        th { padding: 12px 16px; text-align: left; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+        th:last-child { text-align: right; }
+        td { padding: 14px 16px; font-size: 14px; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.04); }
+        td:last-child { text-align: right; }
+        tr:last-child td { border-bottom: none; }
+
+        .factura-footer { padding: 24px 40px; background: rgba(0,201,167,0.04); border-top: 1px solid rgba(0,201,167,0.12); display: flex; justify-content: space-between; align-items: center; }
+        .total-label { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600; color: var(--muted); }
+        .total-value { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 700; color: var(--aqua); }
+
+        .actions { display: flex; gap: 12px; margin-top: 24px; }
+        .btn-print { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; background: rgba(55,138,221,0.12); border: 1px solid rgba(55,138,221,0.2); border-radius: 10px; color: #60A5FA; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+        .btn-print:hover { background: rgba(55,138,221,0.2); }
+        .btn-anular { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2); border-radius: 10px; color: #FF6B6B; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .btn-anular:hover { background: rgba(255,107,107,0.16); }
+    </style>
+</head>
+<body>
+    <nav>
+        <a class="nav-brand" href="/home"><div class="nav-dot"></div>Fast Shop Guatemala</a>
+        <ul class="nav-links">
+            <li><a href="/home">Inicio</a></li>
+            <li><a href="/mantenimiento">Mantenimiento</a></li>
+            <li><a href="/reportes">Reportes</a></li>
+            <li><a href="/facturacion" class="active">Facturación</a></li>
+        </ul>
+        <div class="nav-user">
+            <div class="avatar">{{ session.nombre[0] | upper }}</div>
+            <span class="nav-username">{{ session.nombre }}</span>
+            <span style="font-size:11px;color:var(--aqua);font-family:'Outfit',sans-serif;font-weight:600;background:rgba(0,201,167,0.1);border:1px solid rgba(0,201,167,0.2);border-radius:100px;padding:2px 8px;">{{ session.nombre_rol }}</span>
+            <a href="/logout" class="btn-logout">
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                Salir
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <a href="/facturacion" class="btn-back">← Volver a Facturación</a>
+
+        <div class="factura-card">
+            <!-- Header -->
+            <div class="factura-header">
+                <div>
+                    <div class="factura-number">Factura #{{ factura.id_factura }}</div>
+                    <div class="factura-date">
+                        {{ factura.fecha.strftime('%d de %B de %Y, %H:%M') if factura.fecha else 'N/A' }}
+                    </div>
+                </div>
+                <div>
+                    {% if factura.estado %}
+                        <span class="badge badge-active">● Activa</span>
+                    {% else %}
+                        <span class="badge badge-inactive">● Anulada</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="factura-info">
+                <div class="info-group">
+                    <label>Cliente</label>
+                    <p>{{ factura.cliente }}</p>
+                </div>
+                <div class="info-group">
+                    <label>NIT</label>
+                    <p>{{ factura.nit or 'CF' }}</p>
+                </div>
+                <div class="info-group">
+                    <label>Atendido por</label>
+                    <p>{{ factura.usuario }}</p>
+                </div>
+                <div class="info-group">
+                    <label>Fecha</label>
+                    <p>{{ factura.fecha.strftime('%d/%m/%Y %H:%M') if factura.fecha else 'N/A' }}</p>
+                </div>
+            </div>
+
+            <!-- Detalle productos -->
+            <div class="factura-body">
+                <p class="section-title">Detalle de productos</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Producto</th>
+                            <th>Precio Unit.</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i, d in enumerate(detalles) %}
+                        <tr>
+                            <td style="color:var(--muted);">{{ i+1 }}</td>
+                            <td style="font-weight:500;">{{ d.producto }}</td>
+                            <td style="color:var(--muted);">Q{{ "%.2f"|format(d.precio_unitario) }}</td>
+                            <td>{{ d.cantidad }}</td>
+                            <td style="font-family:'Outfit',sans-serif;font-weight:600;color:var(--aqua);">Q{{ "%.2f"|format(d.subtotal) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Total -->
+            <div class="factura-footer">
+                <span class="total-label">Total</span>
+                <span class="total-value">Q{{ "%.2f"|format(factura.total) }}</span>
+            </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="actions">
+            <button class="btn-print" onclick="window.print()">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                Imprimir
+            </button>
+            {% if puede_eliminar and factura.estado %}
+            <a href="/facturacion/anular/{{ factura.id_factura }}" class="btn-anular" onclick="return confirm('¿Seguro que deseas anular esta factura?')">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                Anular Factura
+            </a>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

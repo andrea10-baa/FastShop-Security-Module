@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios - Fast Shop Guatemala</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --aqua: #00C9A7; --aqua2: #00A98F; --dark: #0A0F1E; --card: #161D2F; --border: rgba(0,201,167,0.15); --text: #E8F0FE; --muted: #6B7A99; }
+        body { min-height: 100vh; background: var(--dark); font-family: 'DM Sans', sans-serif; color: var(--text); }
+        body::before { content: ''; position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse 70% 50% at 10% 0%, rgba(0,201,167,0.10) 0%, transparent 60%), radial-gradient(ellipse 50% 60% at 90% 100%, rgba(0,119,255,0.08) 0%, transparent 60%); pointer-events: none; }
+        body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-image: radial-gradient(rgba(0,201,167,0.06) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; }
+
+        nav { position: sticky; top: 0; z-index: 100; background: rgba(10,15,30,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 0 32px; display: flex; align-items: center; height: 64px; }
+        .nav-brand { font-family: 'Outfit', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; flex: 1; }
+        .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--aqua); box-shadow: 0 0 8px var(--aqua); animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+        .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+        .nav-links a { display: block; padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; transition: all 0.2s; }
+        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+        .nav-links a.active { color: var(--aqua); background: rgba(0,201,167,0.08); }
+        .nav-user { display: flex; align-items: center; gap: 10px; margin-left: 16px; padding-left: 16px; border-left: 1px solid rgba(255,255,255,0.08); }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--aqua), var(--aqua2)); display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; color: #0A0F1E; }
+        .nav-username { font-size: 13px; font-weight: 500; color: var(--text); }
+        .btn-logout { display: flex; align-items: center; gap: 6px; padding: 7px 14px; background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2); border-radius: 8px; color: #FF6B6B; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.2s; margin-left: 8px; }
+
+        /* ── Dropdown ── */
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-btn { display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:8px; font-size:14px; font-weight:500; color:var(--muted); background:none; border:none; font-family:'DM Sans',sans-serif; cursor:pointer; transition:all .2s; }
+        .nav-dropdown-btn:hover { color:var(--text); background:rgba(255,255,255,.06); }
+        .nav-dropdown-btn.active { color:var(--aqua); background:rgba(0,201,167,.08); }
+        .chev { transition:transform .22s ease; }
+        .nav-dropdown.open .nav-dropdown-btn { color:var(--aqua); background:rgba(0,201,167,.08); }
+        .nav-dropdown.open .chev { transform:rotate(180deg); }
+        .dd-menu { display:none !important; position:absolute; top:calc(100% + 10px); left:0; min-width:220px; background:#161D2F; border:1px solid var(--border); border-radius:14px; padding:6px; box-shadow:0 20px 48px rgba(0,0,0,.55); z-index:300; white-space:nowrap; }
+        .nav-dropdown.open .dd-menu { display:block !important; animation:fade .16s ease; }
+        .dd-menu a { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:9px; font-size:13.5px; font-weight:500; color:var(--muted); text-decoration:none; transition:all .18s; }
+        .dd-menu a:hover { color:var(--text); background:rgba(255,255,255,.06); }
+        .dd-sep { height:1px; background:rgba(255,255,255,.06); margin:5px 0; }
+        .rol-pill { font-size:11px; color:var(--aqua); font-family:'Outfit',sans-serif; font-weight:600; background:rgba(0,201,167,.1); border:1px solid rgba(0,201,167,.2); border-radius:100px; padding:2px 8px; }
+        @keyframes fade { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+
+        main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 48px 24px; }
+        .page-header { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px 40px; margin-bottom: 32px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; }
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--aqua), transparent); }
+        .page-header-left h1 { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .page-header-left p { font-size: 14px; color: var(--muted); }
+        .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; background: linear-gradient(135deg, var(--aqua), var(--aqua2)); border: none; border-radius: 10px; color: #0A0F1E; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(0,201,167,0.25); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,201,167,0.35); }
+        .section-title { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+        .table-card { background: var(--card); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: rgba(0,201,167,0.05); border-bottom: 1px solid rgba(255,255,255,0.06); }
+        th { padding: 14px 20px; text-align: left; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+        td { padding: 16px 20px; font-size: 14px; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        .badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 100px; font-size: 12px; font-weight: 600; }
+        .badge-admin    { background: rgba(0,201,167,0.12); color: var(--aqua); border: 1px solid rgba(0,201,167,0.2); }
+        .badge-contable { background: rgba(55,138,221,0.12); color: #60A5FA; border: 1px solid rgba(55,138,221,0.2); }
+        .badge-tecnico  { background: rgba(139,92,246,0.12); color: #A78BFA; border: 1px solid rgba(139,92,246,0.2); }
+        .badge-active   { background: rgba(0,201,167,0.12); color: var(--aqua); border: 1px solid rgba(0,201,167,0.2); }
+        .badge-inactive { background: rgba(255,107,107,0.10); color: #FF6B6B; border: 1px solid rgba(255,107,107,0.2); }
+        .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--aqua), var(--aqua2)); display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; color: #0A0F1E; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .btn-sm { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 7px; font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; margin-right: 4px; }
+        .btn-edit   { background: rgba(251,140,0,0.12); color: #F59E0B; border: 1px solid rgba(251,140,0,0.2); }
+        .btn-edit:hover { background: rgba(251,140,0,0.22); }
+        .btn-delete { background: rgba(255,107,107,0.10); color: #FF6B6B; border: 1px solid rgba(255,107,107,0.2); }
+        .btn-delete:hover { background: rgba(255,107,107,0.20); }
+        .alert-success { display: flex; align-items: center; gap: 10px; background: rgba(0,201,167,0.08); border: 1px solid rgba(0,201,167,0.25); border-radius: 12px; padding: 12px 16px; margin-bottom: 24px; color: var(--aqua); font-size: 14px; }
+        .alert-error { display: flex; align-items: flex-start; gap: 14px; background: rgba(255,107,107,0.10); border: 1px solid rgba(255,107,107,0.35); border-radius: 16px; padding: 20px 24px; margin-bottom: 24px; color: #FF6B6B; font-size: 15px; font-weight: 500; box-shadow: 0 4px 24px rgba(255,107,107,0.12); animation: slideIn 0.3s ease; }
+        .alert-error-text strong { display: block; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 4px; color: #FF6B6B; }
+        .alert-error-text span { font-size: 13px; color: rgba(255,107,107,0.75); }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 36px; width: 100%; max-width: 480px; margin: 20px; position: relative; }
+        .modal::before { content: ''; position: absolute; top: 0; left: 24px; right: 24px; height: 2px; background: linear-gradient(90deg, transparent, var(--aqua), transparent); }
+        .modal h2 { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 24px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: all 0.2s; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--aqua); background: rgba(0,201,167,0.05); box-shadow: 0 0 0 3px rgba(0,201,167,0.10); }
+        .form-group input::placeholder { color: rgba(107,122,153,0.6); }
+        .form-group select option { background: #161D2F; }
+        .rol-info { background: rgba(0,201,167,0.05); border: 1px solid rgba(0,201,167,0.12); border-radius: 10px; padding: 12px 14px; margin-top: 8px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+        .modal-footer { display: flex; gap: 12px; margin-top: 24px; }
+        .btn-cancel { flex: 1; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: var(--muted); font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-cancel:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+        .btn-save { flex: 2; padding: 12px; background: linear-gradient(135deg, var(--aqua), var(--aqua2)); border: none; border-radius: 10px; color: #0A0F1E; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .btn-save:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,201,167,0.3); }
+    </style>
+</head>
+<body>
+<nav>
+    <a class="nav-brand" href="/home"><div class="nav-dot"></div>Fast Shop Guatemala</a>
+    <ul class="nav-links">
+        <li><a href="/home">Inicio</a></li>
+        <li class="nav-dropdown" id="ddNav">
+            <button class="nav-dropdown-btn active" onclick="toggleNavDD(event)">
+                Mantenimiento
+                <svg class="chev" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div class="dd-menu">
+                {% if session.id_rol == 1 or session.id_rol == 3 %}
+                <a href="/clientes">
+                    <div>
+                        <div style="color:var(--text);font-size:13px;font-weight:600;">Clientes</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Gestión de clientes</div>
+                    </div>
+                </a>
+                <a href="/productos">
+                    <div>
+                        <div style="color:var(--text);font-size:13px;font-weight:600;">Productos</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Inventario de productos</div>
+                    </div>
+                </a>
+                {% elif session.id_rol == 2 %}
+                <a href="/sin-acceso">
+                    <div>
+                        <div style="color:var(--text);font-size:13px;font-weight:600;">Clientes</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Gestión de clientes</div>
+                    </div>
+                </a>
+                <a href="/sin-acceso">
+                    <div>
+                        <div style="color:var(--text);font-size:13px;font-weight:600;">Productos</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Inventario de productos</div>
+                    </div>
+                </a>
+                {% endif %}
+                {% if session.id_rol == 1 %}
+                <div class="dd-sep"></div>
+                <a href="/usuarios">
+                    <div>
+                        <div style="color:var(--text);font-size:13px;font-weight:600;">Usuarios</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Gestión de usuarios</div>
+                    </div>
+                </a>
+                {% endif %}
+            </div>
+        </li>
+        <li class="nav-dropdown" id="ddReportes">
+            <button class="nav-dropdown-btn" onclick="toggleReportesDD(event)">
+                Reportes
+                <svg class="chev" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div class="dd-menu">
+                <a href="/reportes?tipo=clientes">
+                    <div>
+                        <div style="color:var(--text);font-size:13px;font-weight:600;">Reporte de Clientes</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Listado y estadísticas de clientes</div>
+                    </div>
+                </a>
+                <a href="/reportes?tipo=productos">
+                    <div>
+                        <div style="color:var(--text);font-size:13px;font-weight:600;">Reporte de Productos</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Inventario y estadísticas de productos</div>
+                    </div>
+                </a>
+            </div>
+        </li>
+        <li><a href="/facturacion">Facturación</a></li>
+    </ul>
+    <div class="nav-user">
+        <div class="avatar">{{ session.nombre[0] | upper }}</div>
+        <span class="nav-username">{{ session.nombre }}</span>
+        <span class="rol-pill">{{ session.nombre_rol }}</span>
+        <a href="/logout" class="btn-logout">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Salir
+        </a>
+    </div>
+</nav>
+
+<main>
+    {% if mensaje %}
+    <div class="alert-success">✅ {{ mensaje }}</div>
+    {% endif %}
+    {% if error %}
+    <div class="alert-error">
+        <div class="alert-error-text">
+            <strong>Acción no permitida</strong>
+            <span>{{ error }}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="page-header">
+        <div class="page-header-left">
+            <h1>Gestión de Usuarios</h1>
+            <p>Crear usuarios y asignar roles del sistema</p>
+        </div>
+        <button class="btn-primary" onclick="abrirModal()">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+            Nuevo Usuario
+        </button>
+    </div>
+
+    <p class="section-title">Usuarios del sistema</p>
+
+    <div class="table-card">
+        {% if usuarios %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Usuario</th><th>Email</th><th>Rol</th><th>Estado</th><th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">{{ u.usuario[0] | upper }}</div>
+                            <span style="font-family:'Outfit',sans-serif;font-weight:600;">{{ u.usuario }}</span>
+                        </div>
+                    </td>
+                    <td style="color:var(--muted);">{{ u.email or '—' }}</td>
+                    <td>
+                        {% if u.id_rol == 1 %}
+                            <span class="badge badge-admin">Administrador</span>
+                        {% elif u.id_rol == 2 %}
+                            <span class="badge badge-contable">Contable</span>
+                        {% else %}
+                            <span class="badge badge-tecnico">Técnico</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if u.estado %}
+                            <span class="badge badge-active"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;"></span> Activo</span>
+                        {% else %}
+                            <span class="badge badge-inactive"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;"></span> Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button class="btn-sm btn-edit" onclick="editarUsuario({{ u.id_usuario }}, '{{ u.usuario }}','{{ u.email or '' }}', {{ u.id_rol }}, {{ u.estado }})">
+                            Editar
+                        </button>
+                        {% if u.id_usuario != session.user_id %}
+                        <a href="/usuarios/eliminar/{{ u.id_usuario }}" class="btn-sm btn-delete" onclick="return confirm('¿Eliminar este usuario?')">
+                            Eliminar
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty"><p>No hay usuarios registrados.</p></div>
+        {% endif %}
+    </div>
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <h2 id="modalTitulo">Nuevo Usuario</h2>
+        <form method="POST" action="/usuarios/guardar">
+            <input type="hidden" id="id_usuario" name="id_usuario">
+            <div class="form-group">
+                <label>Nombre de Usuario *</label>
+                <input type="text" id="usuario" name="usuario" placeholder="nombre de usuario" required autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" name="email" placeholder="correo@ejemplo.com">
+            </div>
+            <div class="form-group">
+                <label>Contraseña <span id="pass-hint" style="color:var(--muted);font-weight:400;text-transform:none;display:none;">(dejar vacío para no cambiar)</span></label>
+                <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label>Rol del Sistema *</label>
+                <select id="id_rol" name="id_rol" required onchange="mostrarInfoRol(this.value)">
+                    <option value="">Selecciona un rol...</option>
+                    {% for r in roles %}
+                    <option value="{{ r.id_rol }}">{{ r.nombre_rol }}</option>
+                    {% endfor %}
+                </select>
+                <div class="rol-info" id="rol-info" style="display:none;"></div>
+            </div>
+            <div class="form-group">
+                <label>Estado</label>
+                <select id="estado" name="estado">
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+                <button type="submit" class="btn-save">Guardar Usuario</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleNavDD(e) {
+        e.stopPropagation();
+        document.getElementById('ddNav').classList.toggle('open');
+        document.getElementById('ddReportes').classList.remove('open');
+    }
+    function toggleReportesDD(e) {
+        e.stopPropagation();
+        document.getElementById('ddReportes').classList.toggle('open');
+        document.getElementById('ddNav').classList.remove('open');
+    }
+    document.addEventListener('click', function() {
+        document.getElementById('ddNav').classList.remove('open');
+        document.getElementById('ddReportes').classList.remove('open');
+    });
+    document.querySelectorAll('.dd-menu a').forEach(function(link) {
+        link.addEventListener('click', function() {
+            document.getElementById('ddNav').classList.remove('open');
+            document.getElementById('ddReportes').classList.remove('open');
+        });
+    });
+
+    const rolInfo = {
+        "1": "Administrador — Acceso total al sistema: clientes, productos, reportes, facturación y gestión de usuarios.",
+        "2": "Contable — Puede ver reportes y facturas. Puede crear y ver facturas.",
+        "3": "Técnico de Inventario — Puede gestionar productos (crear, ver, editar). Sin acceso a reportes ni facturación."
+    };
+
+    function mostrarInfoRol(val) {
+        const div = document.getElementById('rol-info');
+        if (val && rolInfo[val]) { div.style.display = 'block'; div.textContent = rolInfo[val]; }
+        else { div.style.display = 'none'; }
+    }
+    function abrirModal() {
+        document.getElementById('modalTitulo').textContent = 'Nuevo Usuario';
+        document.getElementById('id_usuario').value = '';
+        document.querySelector('form').reset();
+        document.getElementById('pass-hint').style.display = 'none';
+        document.getElementById('contrasena').required = true;
+        document.getElementById('rol-info').style.display = 'none';
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+    function cerrarModal() {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+    function editarUsuario(id, usuario, email, rol, estado) {
+        document.getElementById('modalTitulo').textContent = 'Editar Usuario';
+        document.getElementById('id_usuario').value = id;
+        document.getElementById('usuario').value = usuario;
+        document.getElementById('email').value = email;
+        document.getElementById('id_rol').value = rol;
+        document.getElementById('estado').value = estado;
+        document.getElementById('contrasena').required = false;
+        document.getElementById('pass-hint').style.display = 'inline';
+        mostrarInfoRol(rol.toString());
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+    document.getElementById('modalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) cerrarModal();
+    });
+</script>
+</body>
+</html>
